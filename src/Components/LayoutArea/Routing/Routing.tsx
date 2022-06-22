@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 // import PleaseWait from "../../SharedArea/PleaseWait/PleaseWait";
 // import Register from "../../AuthArea/Register/Register";
 import Login from "../../AuthArea/Login/Login";
+import Register from "../../AuthArea/Register/Register";
 // import Logout from "../../AuthArea/Logout/Logout";
 import Home from "../../HomeArea/Home/Home";
 
@@ -11,7 +12,7 @@ function Routing(): JSX.Element {
     return (
         <Routes>
             <Route path="/home" element={<Home />} />
-            {/*<Route path="/register" component={Register} exact /> */}
+            <Route path="/register" element={<Register />}  />
             <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/login" element={<Login />} />
             {/* <Route path="/logout" component={Logout} exact /> */}

@@ -4,8 +4,7 @@ import Button from '@mui/material/Button';
 import { toast } from 'react-toastify';
 import Store from '../../../Redux/Store';
 import { userLoggedInAction } from '../../../Redux/AuthState';
-import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import UserModel from '../../../Models/UserModel';
 import CredentialsModel from '../../../Models/CredentialsModel';
 import globals from '../../../Services/Globals';
@@ -22,17 +21,18 @@ function Login(): JSX.Element {
 
     async function submit(credentials: CredentialsModel) {
         try {
-            const response = await JwtAxios.post<UserModel>(globals.loginUrl, credentials);
-            console.log(response);
-            
+            const response = await JwtAxios.post<UserModel>(globals.loginUrl, credentials)
+                .then(res => res)
+                .catch(err => {
+                    throw new Error("Incorrect email or password");
+                });
+
             Store.dispatch(userLoggedInAction(response.data));
             toast.success("Logged-in successfully.");
             navigate("/home");
         }
-        catch (error) {
-            // toast.error(error as string);
-            console.log(error);
-            
+        catch (error: any) {
+            toast.error(`${error}`);
         }
     }
 
@@ -44,7 +44,7 @@ function Login(): JSX.Element {
                 '& .MuiTextField-root': { width: '100%' },
             }}
         >
-            <div>
+            <div id="login-form">
                 <TextField
                     required
                     id="email-input"
@@ -75,12 +75,11 @@ function Login(): JSX.Element {
                     error={formState.errors.password && formState.dirtyFields.password}
                     helperText={formState.dirtyFields.password && formState.touchedFields.password && formState.errors.password?.message}
                 />
-
-
+                <Button variant="contained" color="success" size='large' type='submit' disabled={!formState.isValid}>
+                    Success
+                </Button>
             </div>
-            <Button variant="contained" color="success" size='large' type='submit' disabled = {!formState.isValid}>
-                Success
-            </Button>
+            <NavLink to={"/register"}>register</NavLink>
         </Box>
     );
 }
